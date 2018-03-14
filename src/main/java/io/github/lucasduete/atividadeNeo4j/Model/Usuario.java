@@ -1,32 +1,21 @@
 package io.github.lucasduete.atividadeNeo4j.Model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class Usuario {
 
     private String email;
-    private List<Usuario> seguindo;
-    private List<Usuario> seguidores;
-    private List<Postagem> postagens;
-
-    {
-        seguindo = new ArrayList<>();
-        seguidores = new ArrayList<>();
-        postagens = new ArrayList<>();
-    }
+    private String nome;
+    private String senha;
 
     public Usuario() {
 
     }
 
-    public Usuario(String email, List<Usuario> seguindo,List<Usuario> seguidores, List<Postagem> postagens) {
-
+    public Usuario(String email, String nome, String senha) {
         this.email = email;
-        this.seguindo = seguindo;
-        this.seguidores = seguidores;
-        this.postagens = postagens;
+        this.nome = nome;
+        this.senha = senha;
     }
 
     public String getEmail() {
@@ -37,28 +26,20 @@ public class Usuario {
         this.email = email;
     }
 
-    public List<Usuario> getSeguindo() {
-        return seguindo;
+    public String getNome() {
+        return nome;
     }
 
-    public void setSeguindo(List<Usuario> seguindo) {
-        this.seguindo = seguindo;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public List<Usuario> getSeguidores() {
-        return seguidores;
+    public String getSenha() {
+        return senha;
     }
 
-    public void setSeguidores(List<Usuario> seguidores) {
-        this.seguidores = seguidores;
-    }
-
-    public List<Postagem> getPostagens() {
-        return postagens;
-    }
-
-    public void setPostagens(List<Postagem> postagens) {
-        this.postagens = postagens;
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 
     @Override
@@ -68,15 +49,14 @@ public class Usuario {
         if (o == null || getClass() != o.getClass()) return false;
         Usuario usuario = (Usuario) o;
         return Objects.equals(getEmail(), usuario.getEmail()) &&
-                Objects.equals(getSeguindo(), usuario.getSeguindo()) &&
-                Objects.equals(getSeguidores(), usuario.getSeguidores()) &&
-                Objects.equals(getPostagens(), usuario.getPostagens());
+                Objects.equals(getNome(), usuario.getNome()) &&
+                Objects.equals(getSenha(), usuario.getSenha());
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(getEmail(), getSeguindo(), getSeguidores(), getPostagens());
+        return Objects.hash(getEmail(), getNome(), getSenha());
     }
 
     @Override
@@ -84,9 +64,8 @@ public class Usuario {
 
         return "Usuario{" +
                 "email='" + email + '\'' +
-                ", seguindo=" + seguindo +
-                ", seguidores=" + seguidores +
-                ", postagens=" + postagens +
+                ", nome='" + nome + '\'' +
+                ", senha='" + senha + '\'' +
                 '}';
     }
 }
