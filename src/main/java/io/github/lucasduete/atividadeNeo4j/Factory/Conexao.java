@@ -8,16 +8,11 @@ import java.io.File;
 public class Conexao {
 
     private static final File BANCO = new File("twitter_clone.db");
-    private static GraphDatabaseService graphDB;
 
     public static GraphDatabaseService getConexao() {
-        graphDB = new GraphDatabaseFactory().newEmbeddedDatabase(BANCO);
+        GraphDatabaseService graphDB = new GraphDatabaseFactory().newEmbeddedDatabase(BANCO);
 
         return graphDB;
-    }
-
-    public static void closeConexao() {
-        graphDB.shutdown();
     }
 
 }
