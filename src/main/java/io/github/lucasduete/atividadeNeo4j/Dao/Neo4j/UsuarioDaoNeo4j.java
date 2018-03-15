@@ -19,6 +19,7 @@ public class UsuarioDaoNeo4j implements UsuarioDaoInterface {
 
     @Override
     public boolean cadastrar(Usuario usuario) {
+
         try(Transaction tx = conexao.beginTx()) {
 
             Node node = conexao.createNode(Label.label("Usuario"));
@@ -68,7 +69,7 @@ public class UsuarioDaoNeo4j implements UsuarioDaoInterface {
 
         try(Transaction tx = conexao.beginTx()) {
 
-            Node node = conexao.findNode(Label.label("Usuario"), "email", emailUser);
+            Node node = conexao.findNode(Label.label("Usuario"), "Email", emailUser);
 
             for (Relationship relacionamento : node.getRelationships(Direction.INCOMING, Relacionamentos.SEGUIR)) {
                 Node node2 = relacionamento.getEndNode();
@@ -95,7 +96,7 @@ public class UsuarioDaoNeo4j implements UsuarioDaoInterface {
 
         try(Transaction tx = conexao.beginTx()) {
 
-            Node node = conexao.findNode(Label.label("Usuario"), "email", emailUser);
+            Node node = conexao.findNode(Label.label("Usuario"), "Email", emailUser);
 
             for (Relationship relacionamento : node.getRelationships(Direction.OUTGOING, Relacionamentos.SEGUIR)) {
                 Node node2 = relacionamento.getEndNode();
@@ -119,10 +120,53 @@ public class UsuarioDaoNeo4j implements UsuarioDaoInterface {
     public boolean seguir(String emailUser, String emailDestiny) {
 
         try(Transaction tx = conexao.beginTx()) {
-            Node node1 = conexao.findNode(Label.label("Usuario"), "email", emailUser);
-            Node node2 = conexao.findNode(Label.label("emailDestiny"), "email", emailDestiny);
+            Node node1 = conexao.findNode(Label.label("Usuario"), "Email", emailUser);
+            Node node2 = conexao.findNode(Label.label("emailDestiny"), "Email", emailDestiny);
 
             node1.createRelationshipTo(node2, Relacionamentos.SEGUIR);
+
+            tx.success();
+        } finally {
+            conexao.shutdown();
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean remover(Usuario usuario) {
+
+        try(Transaction tx = conexao.beginTx()) {
+
+            //Encontra o usuario
+            Node node = conexao.findNode(Label.label("Usuario"), "Email", usuario.getNome());
+
+            //Remove as Postagens
+            for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Relacionamentos.POSTAR)) {
+                Node nodePost = relationship.getEndNode();
+                nodePost.delete();
+            }
+
+            //Remove o Usuario
+            node.delete();
+
+            tx.success();
+        } finally {
+            conexao.shutdown();
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean atualizar(Usuario usuario) {
+
+        try(Transaction tx = conexao.beginTx()) {
+
+            Node node = conexao.findNode(Label.label("Usuario"), "Email", usuario.getNome());
+
+            node.setProperty("nome", usuario.getNome());
+            node.setProperty("senha", usuario.getSenha());
 
             tx.success();
         } finally {

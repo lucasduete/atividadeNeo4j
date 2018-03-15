@@ -11,4 +11,6 @@ public interface UsuarioDaoInterface {
     public List<Usuario> listarSeguidores(String emailUser);
     public List<Usuario> listarSeguindo(String emailUser);
     public boolean seguir(String emailUser, String emailDestiny);
+    public boolean remover(Usuario usuario);
+    public boolean atualizar(Usuario usuario);
 }
