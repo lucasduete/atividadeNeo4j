@@ -18,15 +18,14 @@ public class PostagemDaoNeo4j implements PostagemDaoInterface {
     }
 
     @Override
-    public boolean cadastrar(Postagem postagem) {
+    public boolean cadastrar(Postagem postagem, String emailUser) {
 
         try(Transaction tx = conexao.beginTx()) {
             Node nodePostagem = conexao.createNode(Label.label("Postagem"));
 
-            nodePostagem.setProperty("emailUsuario", postagem.getEmailUsuario());
             nodePostagem.setProperty("texto",postagem.getTexto());
 
-            Node nodeUser = conexao.findNode(Label.label("Usuario"), "email", postagem.getEmailUsuario());
+            Node nodeUser = conexao.findNode(Label.label("Usuario"), "email", emailUser);
             nodeUser.createRelationshipTo(nodePostagem, Relacionamentos.POSTAR);
 
             tx.success();
@@ -50,7 +49,6 @@ public class PostagemDaoNeo4j implements PostagemDaoInterface {
                 Postagem postagem = new Postagem();
 
                 postagem.setCodigo((int) node.getProperty("__id"));
-                postagem.setEmailUsuario((String) node.getProperty("emailUsuario"));
                 postagem.setTexto((String) node.getProperty("texto"));
 
             }
@@ -69,18 +67,16 @@ public class PostagemDaoNeo4j implements PostagemDaoInterface {
 
         try(Transaction tx = conexao.beginTx()) {
 
-            ResourceIterator<Node> iterator = conexao.findNodes(
-                    Label.label("Postagem"), "emailUsuario", emailUser
-            );
+            Node nodeUsuario = conexao.findNode(Label.label("Usuario"), "email", emailUser);
 
-            while (iterator.hasNext()) {
-                Node node = iterator.next();
-                Postagem postagem = new Postagem();
+            for (Relationship relationship : nodeUsuario.getRelationships(Direction.OUTGOING, Relacionamentos.POSTAR)) {
+                Node nodePost = relationship.getEndNode();
 
-                postagem.setCodigo((int) node.getProperty("__id"));
-                postagem.setEmailUsuario(emailUser);
-                postagem.setTexto((String) node.getProperty("texto"));
+                Postagem post = new Postagem();
+                post.setCodigo(nodePost.getId());
+                post.setTexto((String) nodePost.getProperty("texto"));
 
+                postagens.add(post);
             }
 
             tx.success();

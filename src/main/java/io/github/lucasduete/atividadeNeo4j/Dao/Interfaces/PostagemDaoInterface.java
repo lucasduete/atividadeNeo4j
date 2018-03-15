@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface PostagemDaoInterface {
 
-    public boolean cadastrar(Postagem postagem);
+    public boolean cadastrar(Postagem postagem, String emailUser);
     public List<Postagem> listar();
     public List<Postagem> listarByUser(String emailUser);
 }
