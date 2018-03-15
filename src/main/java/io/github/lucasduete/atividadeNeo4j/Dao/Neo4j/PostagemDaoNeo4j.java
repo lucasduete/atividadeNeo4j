@@ -87,4 +87,35 @@ public class PostagemDaoNeo4j implements PostagemDaoInterface {
         return postagens;
     }
 
+    @Override
+    public boolean remover(Postagem postagem) {
+
+        try(Transaction tx = conexao.beginTx()) {
+
+            Node node = conexao.findNode(Label.label("Postagem"),  "id", postagem.getCodigo());
+            node.delete();
+
+            tx.success();
+        } finally {
+            conexao.shutdown();
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean atualizar(Postagem postagem) {
+
+        try(Transaction tx = conexao.beginTx()) {
+
+            Node node = conexao.findNode(Label.label("Postagem"),  "id", postagem.getCodigo());
+            node.setProperty("texto",postagem.getTexto());
+
+            tx.success();
+        } finally {
+            conexao.shutdown();
+        }
+
+        return true;
+    }
 }
