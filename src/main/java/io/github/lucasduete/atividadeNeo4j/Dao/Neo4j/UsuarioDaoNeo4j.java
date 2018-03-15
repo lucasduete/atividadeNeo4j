@@ -1,6 +1,6 @@
 package io.github.lucasduete.atividadeNeo4j.Dao.Neo4j;
 
-import io.github.lucasduete.atividadeNeo4j.Dao.Enums.Relacionamentos;
+import io.github.lucasduete.atividadeNeo4j.Enums.Relacionamentos;
 import io.github.lucasduete.atividadeNeo4j.Dao.Interfaces.UsuarioDaoInterface;
 import io.github.lucasduete.atividadeNeo4j.Factory.Conexao;
 import io.github.lucasduete.atividadeNeo4j.Model.Usuario;

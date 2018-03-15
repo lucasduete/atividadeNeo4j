@@ -1,8 +1,8 @@
-package io.github.lucasduete.atividadeNeo4j.Dao.Enums;
+package io.github.lucasduete.atividadeNeo4j.Enums;
 
 import org.neo4j.graphdb.RelationshipType;
 
 public enum Relacionamentos implements RelationshipType {
 
-    SEGUIR
+    SEGUIR, POSTAR
 }

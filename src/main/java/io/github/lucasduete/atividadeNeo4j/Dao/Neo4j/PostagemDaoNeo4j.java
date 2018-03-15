@@ -1,5 +1,6 @@
 package io.github.lucasduete.atividadeNeo4j.Dao.Neo4j;
 
+import io.github.lucasduete.atividadeNeo4j.Enums.Relacionamentos;
 import io.github.lucasduete.atividadeNeo4j.Dao.Interfaces.PostagemDaoInterface;
 import io.github.lucasduete.atividadeNeo4j.Factory.Conexao;
 import io.github.lucasduete.atividadeNeo4j.Model.Postagem;
@@ -20,10 +21,13 @@ public class PostagemDaoNeo4j implements PostagemDaoInterface {
     public boolean cadastrar(Postagem postagem) {
 
         try(Transaction tx = conexao.beginTx()) {
-            Node node = conexao.createNode(Label.label("Postagem"));
+            Node nodePostagem = conexao.createNode(Label.label("Postagem"));
 
-            node.setProperty("emailUsuario", postagem.getEmailUsuario());
-            node.setProperty("texto",postagem.getTexto());
+            nodePostagem.setProperty("emailUsuario", postagem.getEmailUsuario());
+            nodePostagem.setProperty("texto",postagem.getTexto());
+
+            Node nodeUser = conexao.findNode(Label.label("Usuario"), "email", postagem.getEmailUsuario());
+            nodeUser.createRelationshipTo(nodePostagem, Relacionamentos.POSTAR);
 
             tx.success();
         } finally {
