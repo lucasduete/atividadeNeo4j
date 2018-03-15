@@ -10,12 +10,12 @@ import org.neo4j.graphdb.Transaction;
 
 public class InitBD {
 
-    public InitBD() {
+    public static void start() {
         initalization();
         insertions();
     }
 
-    public void initalization() {
+    private static void initalization() {
         GraphDatabaseService conn = Conexao.getConexao();
 
         try(Transaction tx = conn.beginTx()) {
@@ -30,7 +30,7 @@ public class InitBD {
         }
     }
 
-    public void insertions() {
+    private static void insertions() {
         GraphDatabaseService conn = Conexao.getConexao();
 
         try(Transaction tx = conn.beginTx()) {
