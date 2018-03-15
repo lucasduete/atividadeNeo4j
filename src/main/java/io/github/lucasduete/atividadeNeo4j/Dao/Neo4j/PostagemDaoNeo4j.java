@@ -48,7 +48,7 @@ public class PostagemDaoNeo4j implements PostagemDaoInterface {
                 Node node = iterator.next();
                 Postagem postagem = new Postagem();
 
-                postagem.setCodigo((int) node.getProperty("__id"));
+                postagem.setCodigo(node.getId());
                 postagem.setTexto((String) node.getProperty("texto"));
 
             }
