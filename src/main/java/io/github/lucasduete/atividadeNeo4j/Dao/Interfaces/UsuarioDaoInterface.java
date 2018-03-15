@@ -8,6 +8,7 @@ public interface UsuarioDaoInterface {
 
     public boolean cadastrar(Usuario usuario);
     public List<Usuario> listar();
-    public List<Usuario> listarSeguidores();
-    public List<Usuario> listarSeguindo();
+    public List<Usuario> listarSeguidores(String emailUser);
+    public List<Usuario> listarSeguindo(String emailUser);
+    public boolean seguir(String emailUser);
 }
