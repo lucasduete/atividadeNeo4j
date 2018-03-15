@@ -1,5 +1,6 @@
 package io.github.lucasduete.atividadeNeo4j.Dao.Neo4j;
 
+import io.github.lucasduete.atividadeNeo4j.Enums.Nodes;
 import io.github.lucasduete.atividadeNeo4j.Enums.Relacionamentos;
 import io.github.lucasduete.atividadeNeo4j.Dao.Interfaces.UsuarioDaoInterface;
 import io.github.lucasduete.atividadeNeo4j.Factory.Conexao;
@@ -22,11 +23,11 @@ public class UsuarioDaoNeo4j implements UsuarioDaoInterface {
 
         try(Transaction tx = conexao.beginTx()) {
 
-            Node node = conexao.createNode(Label.label("Usuario"));
+            Node node = conexao.createNode(Nodes.USUARIO);
 
-            node.setProperty("email", usuario.getEmail());
-            node.setProperty("nome", usuario.getNome());
-            node.setProperty("senha", usuario.getSenha());
+            node.setProperty("Email", usuario.getEmail());
+            node.setProperty("Nome", usuario.getNome());
+            node.setProperty("Senha", usuario.getSenha());
 
             tx.success();
         } finally {
@@ -42,7 +43,7 @@ public class UsuarioDaoNeo4j implements UsuarioDaoInterface {
 
         try(Transaction tx = conexao.beginTx()) {
 
-            ResourceIterator<Node> iterator = conexao.findNodes(Label.label("Usuario"));
+            ResourceIterator<Node> iterator = conexao.findNodes(Nodes.USUARIO);
 
             while (iterator.hasNext()) {
                 Node node = iterator.next();
@@ -69,7 +70,7 @@ public class UsuarioDaoNeo4j implements UsuarioDaoInterface {
 
         try(Transaction tx = conexao.beginTx()) {
 
-            Node node = conexao.findNode(Label.label("Usuario"), "Email", emailUser);
+            Node node = conexao.findNode(Nodes.USUARIO, "Email", emailUser);
 
             for (Relationship relacionamento : node.getRelationships(Direction.INCOMING, Relacionamentos.SEGUIR)) {
                 Node node2 = relacionamento.getEndNode();
@@ -96,7 +97,7 @@ public class UsuarioDaoNeo4j implements UsuarioDaoInterface {
 
         try(Transaction tx = conexao.beginTx()) {
 
-            Node node = conexao.findNode(Label.label("Usuario"), "Email", emailUser);
+            Node node = conexao.findNode(Nodes.USUARIO, "Email", emailUser);
 
             for (Relationship relacionamento : node.getRelationships(Direction.OUTGOING, Relacionamentos.SEGUIR)) {
                 Node node2 = relacionamento.getEndNode();
@@ -120,8 +121,8 @@ public class UsuarioDaoNeo4j implements UsuarioDaoInterface {
     public boolean seguir(String emailUser, String emailDestiny) {
 
         try(Transaction tx = conexao.beginTx()) {
-            Node node1 = conexao.findNode(Label.label("Usuario"), "Email", emailUser);
-            Node node2 = conexao.findNode(Label.label("emailDestiny"), "Email", emailDestiny);
+            Node node1 = conexao.findNode(Nodes.USUARIO, "Email", emailUser);
+            Node node2 = conexao.findNode(Nodes.USUARIO, "Email", emailDestiny);
 
             node1.createRelationshipTo(node2, Relacionamentos.SEGUIR);
 
@@ -139,7 +140,7 @@ public class UsuarioDaoNeo4j implements UsuarioDaoInterface {
         try(Transaction tx = conexao.beginTx()) {
 
             //Encontra o usuario
-            Node node = conexao.findNode(Label.label("Usuario"), "Email", usuario.getNome());
+            Node node = conexao.findNode(Nodes.USUARIO, "Email", usuario.getNome());
 
             //Remove as Postagens
             for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Relacionamentos.POSTAR)) {
@@ -163,7 +164,7 @@ public class UsuarioDaoNeo4j implements UsuarioDaoInterface {
 
         try(Transaction tx = conexao.beginTx()) {
 
-            Node node = conexao.findNode(Label.label("Usuario"), "Email", usuario.getNome());
+            Node node = conexao.findNode(Nodes.USUARIO, "Email", usuario.getNome());
 
             node.setProperty("nome", usuario.getNome());
             node.setProperty("senha", usuario.getSenha());

@@ -1,5 +1,6 @@
 package io.github.lucasduete.atividadeNeo4j.Dao.Neo4j;
 
+import io.github.lucasduete.atividadeNeo4j.Enums.Nodes;
 import io.github.lucasduete.atividadeNeo4j.Enums.Relacionamentos;
 import io.github.lucasduete.atividadeNeo4j.Dao.Interfaces.PostagemDaoInterface;
 import io.github.lucasduete.atividadeNeo4j.Factory.Conexao;
@@ -21,11 +22,11 @@ public class PostagemDaoNeo4j implements PostagemDaoInterface {
     public boolean cadastrar(Postagem postagem, String emailUser) {
 
         try(Transaction tx = conexao.beginTx()) {
-            Node nodePostagem = conexao.createNode(Label.label("Postagem"));
+            Node nodePostagem = conexao.createNode(Nodes.POSTAGEM);
 
-            nodePostagem.setProperty("texto",postagem.getTexto());
+            nodePostagem.setProperty("Texto",postagem.getTexto());
 
-            Node nodeUser = conexao.findNode(Label.label("Usuario"), "email", emailUser);
+            Node nodeUser = conexao.findNode(Nodes.USUARIO, "Email", emailUser);
             nodeUser.createRelationshipTo(nodePostagem, Relacionamentos.POSTAR);
 
             tx.success();
@@ -42,14 +43,14 @@ public class PostagemDaoNeo4j implements PostagemDaoInterface {
 
         try(Transaction tx = conexao.beginTx()) {
 
-            ResourceIterator<Node> iterator = conexao.findNodes(Label.label("Postagem"));
+            ResourceIterator<Node> iterator = conexao.findNodes(Nodes.POSTAGEM);
 
             while (iterator.hasNext()) {
                 Node node = iterator.next();
                 Postagem postagem = new Postagem();
 
                 postagem.setCodigo(node.getId());
-                postagem.setTexto((String) node.getProperty("texto"));
+                postagem.setTexto((String) node.getProperty("Texto"));
 
             }
 
@@ -67,14 +68,14 @@ public class PostagemDaoNeo4j implements PostagemDaoInterface {
 
         try(Transaction tx = conexao.beginTx()) {
 
-            Node nodeUsuario = conexao.findNode(Label.label("Usuario"), "email", emailUser);
+            Node nodeUsuario = conexao.findNode(Nodes.USUARIO, "Email", emailUser);
 
             for (Relationship relationship : nodeUsuario.getRelationships(Direction.OUTGOING, Relacionamentos.POSTAR)) {
                 Node nodePost = relationship.getEndNode();
 
                 Postagem post = new Postagem();
                 post.setCodigo(nodePost.getId());
-                post.setTexto((String) nodePost.getProperty("texto"));
+                post.setTexto((String) nodePost.getProperty("Texto"));
 
                 postagens.add(post);
             }
@@ -92,7 +93,7 @@ public class PostagemDaoNeo4j implements PostagemDaoInterface {
 
         try(Transaction tx = conexao.beginTx()) {
 
-            Node node = conexao.findNode(Label.label("Postagem"),  "id", postagem.getCodigo());
+            Node node = conexao.findNode(Nodes.POSTAGEM,  "id", postagem.getCodigo());
             node.delete();
 
             tx.success();
@@ -108,8 +109,8 @@ public class PostagemDaoNeo4j implements PostagemDaoInterface {
 
         try(Transaction tx = conexao.beginTx()) {
 
-            Node node = conexao.findNode(Label.label("Postagem"),  "id", postagem.getCodigo());
-            node.setProperty("texto",postagem.getTexto());
+            Node node = conexao.findNode(Nodes.POSTAGEM,  "id", postagem.getCodigo());
+            node.setProperty("Texto",postagem.getTexto());
 
             tx.success();
         } finally {
